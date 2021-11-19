@@ -62,12 +62,13 @@ const TRIAL_TYPES = [
 
 const MOSTLY_CONGRUENT = [32, 8, 32, 8, 5, 5, 5, 5];
 const MOSTLY_INCONGRUENT = [8, 32, 8, 32, 5, 5, 5, 5];
-const POSITION_MATRIX = [[50, 50], [50, 50]]
-const UPPER_POSITION = "top-stim"
-const LOWER_POSITION = "bottom-stim"
+const MOSTLY_REPETITIONS = [[80, 20], [20, 80]]
+const EQUAL_SWITCHREP = [[50, 50], [50, 50]]
+const UPPER_POSITION = "top"
+const LOWER_POSITION = "bottom"
 
 function produce_sequence(participant_nr) {
-    // const rep_switch = Math.ceil(participant_nr / 2) % 2 == 0 ? MOSTLY_SWITCHES : MOSTLY_REPETITIONS
+    const rep_switch = Math.ceil(participant_nr / 2) % 2 == 0 ? EQUAL_SWITCHREP : MOSTLY_REPETITIONS
     const is_even = (i) => i % 2 === 0;
     const add_position = (odd, even) => (a) => { a.position = is_even(participant_nr) ? even : odd; return a };
 
@@ -90,7 +91,7 @@ function produce_sequence(participant_nr) {
     };
 
     // Return sequence is a counterbalanced amount of context repetition and switches
-    return counterbalancer(POSITION_MATRIX)
+    return counterbalancer(rep_switch)
         // Populated with each context
         .map(context_zipper());
 }

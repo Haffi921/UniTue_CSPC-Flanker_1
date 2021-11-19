@@ -3,80 +3,73 @@
 $font-family: 'Courier New', Courier, monospace;
 $font-size: 18pt;
 
-.jspsych-display-element {
-  background-color: rgb(0, 0, 0);
-}
-
-.jspsych-content {
-  height: 100%;
+div {
+  box-sizing: inherit;
+  width: inherit;
+  min-width: inherit;
+  max-width: inherit;
 }
 
 p {
+  color: white;
   font-family: $font-family;
   font-size: $font-size;
-  line-height: normal;
-  color: white;
-  margin: 0;
 }
 
-.boxes {
+.jspsych-display-element {
+  background-color: rgb(0, 0, 0);
+  color: white;
+}
+
+.display {
   position: absolute;
+  margin: 15vh 10vw;
+  height: 70vh;
   width: 500px;
-  height: 100%;
-  left: calc(50% - 250px);
-
-  .top-box, .bottom-box {
-    box-sizing: border-box;
+  max-width: 80vw;
+  top: 0;
+  left: calc(50% - min(250px, 40vw) - 10vw);
+  box-sizing: border-box;
+  
+  .top, .bottom {
     position: absolute;
-    width: inherit;
-    height: 300px;
-    margin: 17% 0;
-    border: 2px solid white;
-  }
-
-  .top-box {
-    top: 0;
-  }
-
-  .bottom-box {
-    bottom: 0;
-  }
-
-  .fixation_cross {
-    position: absolute;
-    height: 100%;
-    width: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-family: $font-family;
-  }
-
-  .stimulus {
-    margin: 17% 0;
-    padding: 0;
-    height: 300px;
-    width: 500px;
-    position: absolute;
-    box-sizing: border-box;
+    border: 3px white solid;
+    height: 280px;
+    max-height: 30vh;
+  
     display: flex;
     flex-direction: column;
     justify-content: center;
     white-space: pre;
   }
   
-  .top-stim {
+  .top {
     top: 0;
   }
   
-  .bottom-stim {
+  .bottom {
     bottom: 0;
   }
+  
+  .center-text {
+    position: absolute;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-  .feedback-error {
+  .error {
     p {
       color: red;
     }
-    border: 2px solid red;
+    border-color: red;
+  }
+
+  .green {
+    p {
+      color: green;
+    }
+    border-color: green;
   }
 }
