@@ -1,0 +1,22 @@
+{
+  "name": "jspsych-cspc-task",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "jspsych": "jspsych -e experiment",
+    "start": "npm run jspsych -- run",
+    "build": "npm run jspsych -- build",
+    "jatos": "npm run jspsych -- jatos"
+  },
+  "dependencies": {
+    "@jspsych/plugin-fullscreen": "^1.0.0",
+    "@jspsych/plugin-html-keyboard-response": "^1.0.0",
+    "@jspsych/plugin-preload": "^1.0.0",
+    "jspsych": "^7.0.0",
+    "numjs": "^0.16.1"
+  },
+  "devDependencies": {
+    "jspsych-builder": "^4.0.1"
+  },
+  "browserslist": ">0.25%, not dead"
+}
