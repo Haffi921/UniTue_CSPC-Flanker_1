@@ -1,6 +1,6 @@
 import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
 
-import {display, center_text, box_text} from "./components";
+import {trial_display, center_text, box_text} from "./components";
 
 module.exports = function(jsPsych, sequence) {    
     function removeStim () {
@@ -19,29 +19,29 @@ module.exports = function(jsPsych, sequence) {
 
     const fixation = {
         type: HtmlKeyboardResponsePlugin,
-        stimulus: display(center_text("+")),
+        stimulus: trial_display(center_text("+")),
         choices: "NO_KEYS",
         trial_duration: 500,
     }
     
     const context = {
         type: HtmlKeyboardResponsePlugin,
-        stimulus: display(),
+        stimulus: trial_display(),
         choices: "NO_KEYS",
         trial_duration: 1000,
     }
     
     const distractor = {
         type: HtmlKeyboardResponsePlugin,
-        stimulus: () => display(box_text(jsPsych.timelineVariable("distractor"), [jsPsych.timelineVariable("position")])),
+        stimulus: () => trial_display(box_text(jsPsych.timelineVariable("distractor"), [jsPsych.timelineVariable("position")])),
         choices: "NO_KEYS",
         trial_duration: 140,
     }
     
     const target = {
         type: HtmlKeyboardResponsePlugin,
-        stimulus: () => display(box_text(jsPsych.timelineVariable("target"), ["target", jsPsych.timelineVariable("position")])),
-        choices: ['a', 'f', 'h', 's'],
+        stimulus: () => trial_display(box_text(jsPsych.timelineVariable("target"), ["target", jsPsych.timelineVariable("position")])),
+        choices: ['d', 'l'],
         trial_duration: 1990,
         data: () => ({
             congruency: jsPsych.timelineVariable('congruency'),
@@ -58,7 +58,7 @@ module.exports = function(jsPsych, sequence) {
     
     const feedback = {
         type: HtmlKeyboardResponsePlugin,
-        stimulus: () => display(getFeedbackText()),
+        stimulus: () => trial_display(getFeedbackText()),
         choices: "NO_KEYS",
         trial_duration: 1500,
     }

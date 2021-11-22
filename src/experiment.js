@@ -23,6 +23,7 @@ import PreloadPlugin from "@jspsych/plugin-preload";
 
 import produce_sequence from "./sequence";
 
+import instructions from "./instructions";
 import trial from "./trial";
 import post_trial from "./post_trial";
 
@@ -51,24 +52,25 @@ export async function run({ assetPaths, input = {}, environment }) {
     audio: assetPaths.audio,
     video: assetPaths.video,
   });
-
-  // Welcome screen
-  timeline.push({
-    type: HtmlKeyboardResponsePlugin,
-    stimulus: "<p>Welcome!<p/>",
-  });
-
+  
+  const sequence = produce_sequence(1).slice(0, 2);
+  
   // Switch to fullscreen
   timeline.push({
     type: FullscreenPlugin,
     fullscreen_mode: true,
   });
-    
-  const sequence = produce_sequence(1).slice(0, 2);
 
+  // Welcome screen
+  timeline.push(instructions);
+
+  
+  timeline.push(trial(jsPsych, sequence))
+  
+  const post = post_trial(jsPsych)
   timeline.push(
-    trial(jsPsych, sequence),
-    post_trial(jsPsych),
+    post.post_trial_instructions,
+    post.post_trial,
   )
 
   await jsPsych.run(timeline);

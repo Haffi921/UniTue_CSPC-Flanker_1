@@ -14,6 +14,10 @@ p {
   color: white;
   font-family: $font-family;
   font-size: $font-size;
+
+  .gray {
+    color: gray;
+  }
 }
 
 .jspsych-display-element {
@@ -25,10 +29,10 @@ p {
   position: absolute;
   margin: 15vh 10vw;
   height: 70vh;
-  width: 500px;
+  width: 1200px;
   max-width: 80vw;
   top: 0;
-  left: calc(50% - min(250px, 40vw) - 10vw);
+  left: calc(50% - min(600px, 40vw) - 10vw);
   box-sizing: border-box;
   
   .top, .bottom {
@@ -36,6 +40,8 @@ p {
     border: 3px white solid;
     height: 280px;
     max-height: 30vh;
+    width: 500px;
+    left: calc(50% - min(250px, 40vw));
   
     display: flex;
     flex-direction: column;
@@ -57,6 +63,15 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .hint {
+    p {
+      font-size: 12pt;
+      line-height: 1;
+    }
+    position: absolute;
+    bottom: max(-15vh, -120px);
   }
 
   .error {
