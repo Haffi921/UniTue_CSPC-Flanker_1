@@ -1,7 +1,7 @@
 /**
- * @title conflict-task
+ * @title CSPC Flanker Task
  * @description 
- * @version 0.1.0
+ * @version 1.0.0
  *
  * The following lines specify which media directories will be packaged and preloaded by jsPsych.
  * Modify them to arbitrary paths (or comma-separated lists of paths) within the `media` directory,
@@ -27,6 +27,38 @@ import instructions from "./instructions";
 import trial from "./trial";
 import post_trial from "./post_trial";
 
+(function initBatchConditions() {
+  if (!jatos.batchSession.defined("/condition-counter")) {
+      jatos.batchSession.set("condition-counter", [0, 0, 0, 0])
+      .fail(initBatchConditions); // If it fails: try again
+  }
+})();
+
+function select_group() {
+  const group_counts = jatos.batchSession.get("condition-counter");
+  let min_count = Infinity;
+  let possible_groups = []
+
+  for (let i in group_counts) {
+      if (group_counts[i] < min_count) {
+          min_count = group_counts[i];
+          possible_groups = [i];
+      }
+      else if (group_counts[i] === min_count) {
+          possible_groups.push(i);
+      }
+  }
+
+  let selected_group = possible_groups[Math.floor(Math.random() * possible_groups.length)];
+  group_counts[selected_group]++;
+
+  jatos.batchSession.set("condition-counter", group_counts).fail(() => {
+      selected_group = select_group()
+  });
+
+  return selected_group;
+}
+
 /**
  * This method will be executed by jsPsych Builder and is expected to run the jsPsych experiment
  *
@@ -36,6 +68,7 @@ import post_trial from "./post_trial";
  * @param {{images: string[]; audio: string[]; video: string[];, misc: string[];}} options.assetPaths An object with lists of file paths for the respective `@...Dir` pragmas
  */
 export async function run({ assetPaths, input = {}, environment }) {
+
   const jsPsych = initJsPsych({
     exclusions: {
       min_width: 625,
@@ -52,8 +85,10 @@ export async function run({ assetPaths, input = {}, environment }) {
     audio: assetPaths.audio,
     video: assetPaths.video,
   });
+
+  const group_nr = select_group();
   
-  const sequence = produce_sequence(1).slice(0, 2);
+  const sequence = produce_sequence(group_nr);
   
   // Switch to fullscreen
   timeline.push({
@@ -74,6 +109,8 @@ export async function run({ assetPaths, input = {}, environment }) {
   )
 
   await jsPsych.run(timeline);
+
+  jatos.submitResultsData(jsPsych.data.get().json(), jatos.startNextComponent);
 
   // Return the jsPsych instance so jsPsych Builder can access the experiment results (remove this
   // if you handle results yourself, be it here or in `on_finish()`)

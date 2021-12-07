@@ -7,7 +7,7 @@ function paragraphs() {
 } 
 
 const context_boxes = "<div class='top'></div><div class='bottom'></div>";
-// const center_text = (text) => `<div class='center-text'><p>${text}</p></div>`
+
 function center_text() {
     return `<div class='center-text'><p>${Array.from(arguments).join("</p><p>")}</p></div>`;
 }

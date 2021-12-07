@@ -4,9 +4,8 @@
   "description": "",
   "scripts": {
     "jspsych": "jspsych -e experiment",
-    "start": "npm run jspsych -- run",
-    "build": "npm run jspsych -- build",
-    "jatos": "npm run jspsych -- jatos"
+    "start": "npm run jspsych -- run cspc_flanker_task",
+    "build": "npm run jspsych -- build cspc_flanker_task --jatos"
   },
   "dependencies": {
     "@jspsych/plugin-fullscreen": "^1.0.0",

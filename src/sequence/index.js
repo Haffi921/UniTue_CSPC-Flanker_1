@@ -1,6 +1,13 @@
 const counterbalancer = require("./sequencer/counterbalancer");
 const sequencer = require("./sequencer/sequencer");
 
+const MOSTLY_CONGRUENT = [32, 8, 32, 8, 5, 5, 5, 5];
+const MOSTLY_INCONGRUENT = [8, 32, 8, 32, 5, 5, 5, 5];
+const EQUAL = [[50, 50], [50, 50]]
+const MOSTLY_REPETITIONS = [[80, 20], [20, 80]]
+const UPPER_POSITION = "top"
+const LOWER_POSITION = "bottom"
+
 const TRIAL_TYPES = [
     {
         distractor: "HH HH",
@@ -60,17 +67,33 @@ const TRIAL_TYPES = [
     },
 ];
 
-const MOSTLY_CONGRUENT = [32, 8, 32, 8, 5, 5, 5, 5];
-const MOSTLY_INCONGRUENT = [8, 32, 8, 32, 5, 5, 5, 5];
-const MOSTLY_REPETITIONS = [[80, 20], [20, 80]]
-const EQUAL_SWITCHREP = [[50, 50], [50, 50]]
-const UPPER_POSITION = "top"
-const LOWER_POSITION = "bottom"
+const GROUPS = [
+    {
+        switch_rep: EQUAL,
+        mostly_congruen:UPPER_POSITION,
+        mostly_incongruent: LOWER_POSITION,
+    },
+    {
+        switch_rep: EQUAL,
+        mostly_congruent: LOWER_POSITION,
+        mostly_incongruent: UPPER_POSITION,
+    },
+    {
+        switch_rep: MOSTLY_REPETITIONS,
+        mostly_congruent: UPPER_POSITION,
+        mostly_incongruent: LOWER_POSITION,
+    },
+    {
+        switch_rep: MOSTLY_REPETITIONS,
+        mostly_congruent: LOWER_POSITION,
+        mostly_incongruent: UPPER_POSITION,
+    }
+];
 
-function produce_sequence(participant_nr) {
-    const rep_switch = Math.ceil(participant_nr / 2) % 2 == 0 ? EQUAL_SWITCHREP : MOSTLY_REPETITIONS
-    const is_even = (i) => i % 2 === 0;
-    const add_position = (odd, even) => (a) => { a.position = is_even(participant_nr) ? even : odd; return a };
+function produce_sequence(group_nr) {
+
+    const group = GROUPS[group_nr];
+    const add_position = (pos) => (a) => { a.position = pos; return a };
 
     const context_zipper = () => {
         // Create mostly congruent and mostly incongruent sequences
@@ -78,12 +101,12 @@ function produce_sequence(participant_nr) {
             // Mostly congruent
             sequencer(MOSTLY_CONGRUENT, TRIAL_TYPES)
                 // Odd nr participants get this as upper context; Even nr get this as lower context
-                .map(add_position(UPPER_POSITION, LOWER_POSITION)),
+                .map(add_position(group.mostly_congruent)),
             
             // Mostly incongruent
             sequencer(MOSTLY_INCONGRUENT, TRIAL_TYPES)
                 // Odd nr participants get this as lower context; Even nr get this as upper context
-                .map(add_position(LOWER_POSITION, UPPER_POSITION)),
+                .map(add_position(group.mostly_incongruent)),
         ];
 
         // Returns a map function zips together the context sequences based on the order of 0 and 1 in the array which is being mapped
@@ -91,7 +114,7 @@ function produce_sequence(participant_nr) {
     };
 
     // Return sequence is a counterbalanced amount of context repetition and switches
-    return counterbalancer(rep_switch)
+    return counterbalancer(group.switch_rep)
         // Populated with each context
         .map(context_zipper());
 }
