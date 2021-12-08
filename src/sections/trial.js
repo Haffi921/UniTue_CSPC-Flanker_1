@@ -46,7 +46,8 @@ module.exports = function(jsPsych, sequence) {
         data: () => ({
             congruency: jsPsych.timelineVariable('congruency'),
             type: jsPsych.timelineVariable('type'),
-            correct_key: jsPsych.timelineVariable('correct_key')
+            correct_key: jsPsych.timelineVariable('correct_key'),
+            trial: "trial",
         }),
         on_load: function() {
             setTimeout(removeStim, 590)

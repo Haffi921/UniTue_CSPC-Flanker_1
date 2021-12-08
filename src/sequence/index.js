@@ -3,8 +3,8 @@ const sequencer = require("./sequencer/sequencer");
 
 const MOSTLY_CONGRUENT = [32, 8, 32, 8, 5, 5, 5, 5];
 const MOSTLY_INCONGRUENT = [8, 32, 8, 32, 5, 5, 5, 5];
-const EQUAL = [[50, 50], [50, 50]]
-const MOSTLY_REPETITIONS = [[80, 20], [20, 80]]
+const EQUAL_SWITCHREP = [[50, 50], [50, 50]];
+const MOSTLY_REPETITIONS = [[80, 20], [20, 80]];
 const UPPER_POSITION = "top"
 const LOWER_POSITION = "bottom"
 
@@ -69,12 +69,12 @@ const TRIAL_TYPES = [
 
 const GROUPS = [
     {
-        switch_rep: EQUAL,
-        mostly_congruen:UPPER_POSITION,
+        switch_rep: EQUAL_SWITCHREP,
+        mostly_congruent: UPPER_POSITION,
         mostly_incongruent: LOWER_POSITION,
     },
     {
-        switch_rep: EQUAL,
+        switch_rep: EQUAL_SWITCHREP,
         mostly_congruent: LOWER_POSITION,
         mostly_incongruent: UPPER_POSITION,
     },
@@ -91,8 +91,8 @@ const GROUPS = [
 ];
 
 function produce_sequence(group_nr) {
-
     const group = GROUPS[group_nr];
+
     const add_position = (pos) => (a) => { a.position = pos; return a };
 
     const context_zipper = () => {

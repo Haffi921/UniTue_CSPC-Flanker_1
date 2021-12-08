@@ -15,48 +15,52 @@
 // You can import stylesheets (.scss or .css).
 import "../styles/main.scss";
 
-import { initJsPsych, JsPsych } from "jspsych";
+import { initJsPsych } from "jspsych";
 
 import FullscreenPlugin from "@jspsych/plugin-fullscreen";
-import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
 import PreloadPlugin from "@jspsych/plugin-preload";
+
+//import jatos from "./jatos"
 
 import produce_sequence from "./sequence";
 
-import instructions from "./instructions";
-import trial from "./trial";
-import post_trial from "./post_trial";
+import instructions from "./sections/instructions";
+import trial from "./sections/trial";
+import between_trial from "./sections/between_trial";
+import post_trial from "./sections/post_trial";
 
-(function initBatchConditions() {
-  if (!jatos.batchSession.defined("/condition-counter")) {
-      jatos.batchSession.set("condition-counter", [0, 0, 0, 0])
-      .fail(initBatchConditions); // If it fails: try again
-  }
-})();
+// (function initBatchConditions() {
+// 	if (!jatos.batchSession.defined("/condition-counter")) {
+// 		jatos.batchSession.set("condition-counter", [0, 0, 0, 0])
+// 			.fail(initBatchConditions);
+// 	}
+// })();
 
 function select_group() {
-  const group_counts = jatos.batchSession.get("condition-counter");
-  let min_count = Infinity;
-  let possible_groups = []
+// 	const group_counts = jatos.batchSession.get("condition-counter");
+// 	let min_count = Infinity;
+// 	let possible_groups = []
 
-  for (let i in group_counts) {
-      if (group_counts[i] < min_count) {
-          min_count = group_counts[i];
-          possible_groups = [i];
-      }
-      else if (group_counts[i] === min_count) {
-          possible_groups.push(i);
-      }
-  }
+// 	for (let i in group_counts) {
+// 		if (group_counts[i] < min_count) {
+// 			min_count = group_counts[i];
+// 			possible_groups = [i];
+// 		}
+// 		else if (group_counts[i] === min_count) {
+// 			possible_groups.push(i);
+// 		}
+// 	}
 
-  let selected_group = possible_groups[Math.floor(Math.random() * possible_groups.length)];
-  group_counts[selected_group]++;
+// 	let selected_group = possible_groups[Math.floor(Math.random() * possible_groups.length)];
+// 	group_counts[selected_group]++;
 
-  jatos.batchSession.set("condition-counter", group_counts).fail(() => {
-      selected_group = select_group()
-  });
+// 	jatos.batchSession.set("condition-counter", group_counts).fail(() => {
+// 		selected_group = select_group()
+// 	});
 
-  return selected_group;
+// 	return selected_group;
+
+	return Math.floor(Math.random() * 4);
 }
 
 /**
@@ -69,50 +73,55 @@ function select_group() {
  */
 export async function run({ assetPaths, input = {}, environment }) {
 
-  const jsPsych = initJsPsych({
-    exclusions: {
-      min_width: 625,
-      min_height: 625,
-    }
-  });
+	const jsPsych = initJsPsych({
+		exclusions: {
+			min_width: 625,
+			min_height: 625,
+		},
+		on_finish: function() {
+			jatos.submitResultData(jsPsych.data.get().json(), jatos.endStudy);
+		}
+	});
 
-  const timeline = [];
+	const timeline = [];
 
-  // Preload assets
-  timeline.push({
-    type: PreloadPlugin,
-    images: assetPaths.images,
-    audio: assetPaths.audio,
-    video: assetPaths.video,
-  });
+	// Preload assets
+	timeline.push({
+		type: PreloadPlugin,
+		images: assetPaths.images,
+		audio: assetPaths.audio,
+		video: assetPaths.video,
+	});
 
-  const group_nr = select_group();
-  
-  const sequence = produce_sequence(group_nr);
-  
-  // Switch to fullscreen
-  timeline.push({
-    type: FullscreenPlugin,
-    fullscreen_mode: true,
-  });
+	const group_nr = select_group();
 
-  // Welcome screen
-  timeline.push(instructions);
+	const sequences = [
+		produce_sequence(group_nr),
+		produce_sequence(group_nr),
+		produce_sequence(group_nr),
+		produce_sequence(group_nr),
+		produce_sequence(group_nr),
+	]
 
-  
-  timeline.push(trial(jsPsych, sequence))
-  
-  const post = post_trial(jsPsych)
-  timeline.push(
-    post.post_trial_instructions,
-    post.post_trial,
-  )
+	// Switch to fullscreen
+	timeline.push({
+		type: FullscreenPlugin,
+		fullscreen_mode: true,
+	});
 
-  await jsPsych.run(timeline);
+	// Welcome screen
+	timeline.push(instructions);
 
-  jatos.submitResultsData(jsPsych.data.get().json(), jatos.startNextComponent);
+	for (let sequence of sequences) {
+		timeline.push(trial(jsPsych, sequence));
+		timeline.push(between_trial)
+	}
 
-  // Return the jsPsych instance so jsPsych Builder can access the experiment results (remove this
-  // if you handle results yourself, be it here or in `on_finish()`)
-  return jsPsych;
+	const post = post_trial(jsPsych)
+	timeline.push(
+		post.post_trial_instructions,
+		post.post_trial,
+	)
+
+	await jsPsych.run(timeline);
 }
