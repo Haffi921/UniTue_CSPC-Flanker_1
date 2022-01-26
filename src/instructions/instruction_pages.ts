@@ -1,16 +1,16 @@
 import Instructions from "@jspsych/plugin-instructions";
 
-import { display, center_text, box_text } from "./components";
+import { display, center_text, box_text } from "../components";
 
 const continue_hint = "Please press the right arrow key to continue &#x27A1";
 const backtrack_hint = "&#x2B05 Left arrow key to go back"
 
-const hint = (backtrack) => {
+const hint = (backtrack = false) => {
     if (backtrack) {
-        return box_text(continue_hint + "</p><p>" + backtrack_hint, ["hint"]);
+        return box_text(continue_hint + "</p><p>" + backtrack_hint, "hint");
     }
     else {
-        return box_text(continue_hint, ["hint"]);
+        return box_text(continue_hint, "hint");
     }
 }
 
@@ -23,7 +23,7 @@ const instructions_text = [
     ),
     display(
         center_text("In this experiment you will see a box surrounding a sequence of five letters like this:")
-        + box_text("AAFAA", ["bottom"])
+        + box_text("AAFAA", "bottom")
         + hint(true)
     ),
     display(
@@ -32,12 +32,12 @@ const instructions_text = [
     ),
     display(
         center_text("The four outermost letters will always be the same while the center letter can be different, like this:")
-        + box_text("FFAFF", ["bottom"])
+        + box_text("FFAFF", "bottom")
         + hint(true)
     ),
     display(
         center_text("You should respond to the middle letter, in this case to the letter 'A'")
-        + box_text("<span class='gray'>FF</span><b>A</b><span class='gray'>FF</span>", ["bottom"])
+        + box_text("<span class='gray'>FF</span><b>A</b><span class='gray'>FF</span>", "bottom")
         + hint(true)
     ),
 
@@ -58,90 +58,90 @@ const instructions_text = [
     ),
     display(
         center_text("Here you should respond with the 'D' key")
-        + box_text("AAAAA", ["bottom"])
+        + box_text("AAAAA", "bottom")
         + hint(true)
     ),
     display(
         center_text("Here you should also respond with the 'D' key")
-        + box_text("FFAFF", ["bottom"])
+        + box_text("FFAFF", "bottom")
         + hint(true)
     ),
     display(
         center_text("Here you should respond with the 'L' key")
-        + box_text("FFFFF", ["bottom"])
+        + box_text("FFFFF", "bottom")
         + hint(true)
     ),
     display(
         center_text("Here you should also respond with the 'L' key")
-        + box_text("AAFAA", ["bottom"])
+        + box_text("AAFAA", "bottom")
         + hint(true)
     ),
     display(
         center_text("Here you should respond with the 'D' key")
-        + box_text("SSSSS", ["bottom"])
+        + box_text("SSSSS", "bottom")
         + hint(true)
     ),
     display(
         center_text("Here you should also respond with the 'D' key")
-        + box_text("HHSHH", ["bottom"])
+        + box_text("HHSHH", "bottom")
         + hint(true)
     ),
     display(
         center_text("Here you should respond with the 'L' key")
-        + box_text("HHHHH", ["bottom"])
+        + box_text("HHHHH", "bottom")
         + hint(true)
     ),
     display(
         center_text("Here you should also respond with the 'L' key")
-        + box_text("SSHSS", ["bottom"])
+        + box_text("SSHSS", "bottom")
         + hint(true)
     ),
 
     // Context show-case
     display(
         center_text("There are also areas these letters will be shown to you. <br> Only one letter sequence will be shown at each time.")
-        + box_text("", ["top"])
-        + box_text("", ["bottom"])
+        + box_text("", "top")
+        + box_text("", "bottom")
         + hint(true)
     ),
     display(
         center_text("Before each trial, a '+' will be displayed here in the center. Please center your eyes on this area before each trial.")
-        + box_text("", ["top"])
-        + box_text("", ["bottom"])
+        + box_text("", "top")
+        + box_text("", "bottom")
         + hint(true)
     ),
     display(
         center_text("+")
-        + box_text("", ["top"])
-        + box_text("", ["bottom"])
+        + box_text("", "top")
+        + box_text("", "bottom")
         + hint(true)
     ),
     display(
-        box_text("HHSHH", ["top"])
-        + box_text("", ["bottom"])
+        box_text("HHSHH", "top")
+        + box_text("", "bottom")
         + hint(true)
     ),
     display(
         center_text("Respond with the 'D' key")
-        + box_text("HHSHH", ["top"])
-        + box_text("", ["bottom"])
+        + box_text("HHSHH", "top")
+        + box_text("", "bottom")
         + hint(true)
     ),
     display(
         center_text("+")
-        + box_text("", ["top"])
-        + box_text("", ["bottom"])
+        + box_text("", "top")
+        + box_text("", "bottom")
         + hint(true)
     ),
     display(
-        box_text("", ["top"])
-        + box_text("FFFFF", ["bottom"])
+        box_text("", "top")
+        + box_text("FFFFF", "bottom")
         + hint(true)
     ),
     display(
         center_text("Respond with the 'L' key")
-        + box_text("", ["top"])
-        + box_text("FFFFF", ["bottom"])
+        + box_text("", "top")
+        + box_text("FFFFF", "bottom")
         + hint(true)
     ),
 
@@ -151,11 +151,11 @@ const instructions_text = [
             "You will begin with a practice round and then you will do 5 blocks of 200 trials."
             + "<br><br><br><br>When you are ready to <b>start</b> press the right arrow key &#x27A1"
         )
-        + box_text(backtrack_hint, ["hint"])
+        + box_text(backtrack_hint, "hint")
     )
 ];
 
-module.exports = {
+export default {
     type: Instructions,
     pages: instructions_text,
 }

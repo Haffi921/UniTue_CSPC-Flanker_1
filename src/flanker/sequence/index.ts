@@ -1,5 +1,6 @@
-const counterbalancer = require("./sequencer/counterbalancer");
-const sequencer = require("./sequencer/sequencer");
+import counterbalancer from "./sequencer/counterbalancer";
+
+import sequencer from "./sequencer/sequencer";
 
 const MOSTLY_CONGRUENT = [32, 8, 32, 8, 5, 5, 5, 5];
 const MOSTLY_INCONGRUENT = [8, 32, 8, 32, 5, 5, 5, 5];
@@ -8,7 +9,16 @@ const MOSTLY_REPETITIONS = [[80, 20], [20, 80]];
 const UPPER_POSITION = "top"
 const LOWER_POSITION = "bottom"
 
-const TRIAL_TYPES = [
+interface trial {
+    distractor: string,
+    target: string,
+    congruency: string,
+    type: string,
+    correct_key: string,
+    position?: string,
+}
+
+const TRIAL_TYPES: trial[] = [
     {
         distractor: "HH HH",
         target: "HHHHH",
@@ -69,31 +79,31 @@ const TRIAL_TYPES = [
 
 const GROUPS = [
     {
-        switch_rep: EQUAL_SWITCHREP,
+        switch_rep: [EQUAL_SWITCHREP, MOSTLY_REPETITIONS],
         mostly_congruent: UPPER_POSITION,
         mostly_incongruent: LOWER_POSITION,
     },
     {
-        switch_rep: EQUAL_SWITCHREP,
+        switch_rep: [EQUAL_SWITCHREP, MOSTLY_REPETITIONS],
         mostly_congruent: LOWER_POSITION,
         mostly_incongruent: UPPER_POSITION,
     },
     {
-        switch_rep: MOSTLY_REPETITIONS,
+        switch_rep: [MOSTLY_REPETITIONS, EQUAL_SWITCHREP],
         mostly_congruent: UPPER_POSITION,
         mostly_incongruent: LOWER_POSITION,
     },
     {
-        switch_rep: MOSTLY_REPETITIONS,
+        switch_rep: [MOSTLY_REPETITIONS, EQUAL_SWITCHREP],
         mostly_congruent: LOWER_POSITION,
         mostly_incongruent: UPPER_POSITION,
     }
 ];
 
-function produce_sequence(group_nr) {
+export function produce_sequence(group_nr: number, nr_blocks: number): trial[][] {
     const group = GROUPS[group_nr];
 
-    const add_position = (pos) => (a) => { a.position = pos; return a };
+    const add_position = (pos: string) => (a: trial) => { a.position = pos; return a };
 
     const context_zipper = () => {
         // Create mostly congruent and mostly incongruent sequences
@@ -110,13 +120,17 @@ function produce_sequence(group_nr) {
         ];
 
         // Returns a map function zips together the context sequences based on the order of 0 and 1 in the array which is being mapped
-        return (a) => context_sequences[a].shift();
+        return (a: number) => context_sequences[a].shift();
     };
 
-    // Return sequence is a counterbalanced amount of context repetition and switches
-    return counterbalancer(group.switch_rep)
-        // Populated with each context
-        .map(context_zipper());
-}
+    let sequence: trial[][] = Array(nr_blocks);
 
-module.exports = produce_sequence
+    for (let i in sequence) {
+        // Return sequence is a counterbalanced amount of context repetition and switches
+        sequence[i] = counterbalancer(group.switch_rep[Math.floor(Number(i) * 2 / nr_blocks)])
+            // Populated with each context
+            .map(context_zipper());
+    }
+
+    return sequence;
+}

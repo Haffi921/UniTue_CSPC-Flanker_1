@@ -1,8 +1,8 @@
 import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
 
-import {display, trial_display, center_text, box_text} from "./components";
+import { display, trial_display, center_text, box_text } from "../components";
 
-module.exports = function(jsPsych) {
+export function post_trial(jsPsych: any) {
 
     const values = [
         { center_text: "S\tor\tH?", target: "HH HH", context: "top", keys: ["s", "h"] },
@@ -19,7 +19,7 @@ module.exports = function(jsPsych) {
         type: HtmlKeyboardResponsePlugin,
         stimulus: () => trial_display(
             center_text(jsPsych.timelineVariable("center_text")),
-            box_text(jsPsych.timelineVariable("target"), [jsPsych.timelineVariable("context")])
+            box_text(jsPsych.timelineVariable("target"), jsPsych.timelineVariable("context"))
         ),
         data: () => ({
             box_text: jsPsych.timelineVariable("target"),
@@ -34,9 +34,12 @@ module.exports = function(jsPsych) {
         stimulus: () => {
             const answer = jsPsych.data.getLastTrialData().trials[0].response.toUpperCase();
             return trial_display(
-            box_text(jsPsych.timelineVariable("target").split(" ").join(answer),
-            [jsPsych.timelineVariable("context")])
-        )},
+                box_text(
+                    jsPsych.timelineVariable("target").split(" ").join(answer),
+                    jsPsych.timelineVariable("context")
+                )
+            )
+        },
         choices: "NO_KEYS",
         trial_duration: 500,
     };
@@ -57,8 +60,8 @@ module.exports = function(jsPsych) {
                     + " Your task is to select which letter belongs in the center, in this case either 'A' or 'F'"
                     + "<br><br>Please respond using the 'A', 'S', 'F' and 'H' keys."
                 )
-                + box_text("AA AA", ["top"])
-                + box_text("Press 'space' to continue", ["hint"])
+                + box_text("AA AA", "top")
+                + box_text("Press 'space' to continue", "hint")
             ),
             choices: [' ']
         },

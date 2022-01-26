@@ -1,8 +1,16 @@
 import HtmlKeyboardResponsePlugin from "@jspsych/plugin-html-keyboard-response";
 
-import {trial_display, center_text, box_text} from "./components";
+import {trial_display, center_text, box_text} from "../components";
 
-module.exports = function(jsPsych, sequence) {    
+interface trial {
+    distractor: string,
+    target: string,
+    congruency: string,
+    type: string,
+    correct_key: string,
+}
+
+export function trial(jsPsych: any, sequence: trial[]) {    
     function removeStim () {
         const stim = document.getElementsByClassName("target")[0];
         if (stim === null) {
@@ -14,7 +22,7 @@ module.exports = function(jsPsych, sequence) {
         const data = jsPsych.data.getLastTrialData().trials[0];
         const feedback_text = data.response === null ? "Zu langsam" : (data.correct ? "" : "Fehler");
         const feedback_class = data.correct ? "" : "error";
-        return box_text(feedback_text, ["feedback", jsPsych.timelineVariable("position"), feedback_class]);
+        return box_text(feedback_text, "feedback", jsPsych.timelineVariable("position"), feedback_class);
     }
 
     const fixation = {
@@ -33,14 +41,14 @@ module.exports = function(jsPsych, sequence) {
     
     const distractor = {
         type: HtmlKeyboardResponsePlugin,
-        stimulus: () => trial_display(box_text(jsPsych.timelineVariable("distractor"), [jsPsych.timelineVariable("position")])),
+        stimulus: () => trial_display(box_text(jsPsych.timelineVariable("distractor"), jsPsych.timelineVariable("position"))),
         choices: "NO_KEYS",
         trial_duration: 140,
     }
     
     const target = {
         type: HtmlKeyboardResponsePlugin,
-        stimulus: () => trial_display(box_text(jsPsych.timelineVariable("target"), ["target", jsPsych.timelineVariable("position")])),
+        stimulus: () => trial_display(box_text(jsPsych.timelineVariable("target"), "target", jsPsych.timelineVariable("position"))),
         choices: ['d', 'l'],
         trial_duration: 1990,
         data: () => ({

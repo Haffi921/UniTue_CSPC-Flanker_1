@@ -1,10 +1,10 @@
 import _ from "lodash";
 
-function counterbalancer(weights) {
-    const sum = arr => arr.reduce((a, b) => a + b, 0)
-    const sum2d = arr => arr.reduce((a, b) => a + sum(b), 0)
+export default function counterbalancer(weights: number[][]) {
+    const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0)
+    const sum2d = (arr: number[][]) => arr.reduce((a, b) => a + sum(b), 0)
     
-    let trials = Array(sum2d(weights)).fill(NaN)
+    let trials: number[] = Array(sum2d(weights)).fill(NaN)
 
     const probabilities = weights
         .map(a => a.map(b => b / sum(a)))
@@ -13,21 +13,21 @@ function counterbalancer(weights) {
             )
         );
 
-    function get_index(last_index) {
+    function get_index(last_index: number) {
         const r = Math.random()
         return probabilities[last_index].findIndex(a => r < a)
     }
 
     restart:
     while(true) {
-        let w = _.cloneDeep(weights);
+        let w: number[][] = _.cloneDeep(weights);
         for (let trial in trials) {
-            if (trial == 0) {
+            if (trial === "0") {
                 trials[trial] = Math.floor(Math.random() * w.length);
                 --w[trials[trial]][trials[trial]];
                 continue;
             }
-            const last_index = trials[trial - 1];
+            const last_index = trials[String(Number(trial) - 1)];
             let found = false;
             let tries = 0;
             while (!found) {
@@ -48,5 +48,3 @@ function counterbalancer(weights) {
 
     return trials
 }
-
-module.exports = counterbalancer
