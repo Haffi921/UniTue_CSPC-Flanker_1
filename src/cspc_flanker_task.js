@@ -20,7 +20,7 @@ import { initJsPsych } from "jspsych";
 import FullscreenPlugin from "@jspsych/plugin-fullscreen";
 import PreloadPlugin from "@jspsych/plugin-preload";
 
-//import jatos from "./jatos"
+import jatos from "./jatos"
 
 import produce_sequence from "./sequence";
 
@@ -29,12 +29,12 @@ import trial from "./sections/trial";
 import between_trial from "./sections/between_trial";
 import post_trial from "./sections/post_trial";
 
-// (function initBatchConditions() {
-// 	if (!jatos.batchSession.defined("/condition-counter")) {
-// 		jatos.batchSession.set("condition-counter", [0, 0, 0, 0])
-// 			.fail(initBatchConditions);
-// 	}
-// })();
+function initBatchConditions() {
+	if (!jatos.batchSession.defined("/condition-counter")) {
+		jatos.batchSession.set("condition-counter", [0, 0, 0, 0])
+			.catch(initBatchConditions);
+	}
+};
 
 function select_group() {
 	const group_counts = jatos.batchSession.get("condition-counter");
@@ -80,6 +80,8 @@ export async function run({ assetPaths, input = {}, environment }) {
 			jatos.submitResultData(jsPsych.data.get().json(), jatos.endStudy);
 		}
 	});
+
+	initBatchConditions();
 
 	const timeline = [];
 
