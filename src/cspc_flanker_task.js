@@ -27,31 +27,6 @@ import trial from "./sections/trial";
 import between_trial from "./sections/between_trial";
 import post_trial from "./sections/post_trial";
 
-// function select_group() {
-// 	const group_counts = jatos.batchSession.get("condition-counter");
-// 	let min_count = Infinity;
-// 	let possible_groups = []
-
-// 	for (let i in group_counts) {
-// 		if (group_counts[i] < min_count) {
-// 			min_count = group_counts[i];
-// 			possible_groups = [i];
-// 		}
-// 		else if (group_counts[i] === min_count) {
-// 			possible_groups.push(i);
-// 		}
-// 	}
-
-// 	let selected_group = possible_groups[Math.floor(Math.random() * possible_groups.length)];
-// 	group_counts[selected_group]++;
-
-// 	jatos.batchSession.set("condition-counter", group_counts).fail(() => {
-// 		selected_group = select_group()
-// 	});
-
-// 	return selected_group;
-// }
-
 /**
  * This method will be executed by jsPsych Builder and is expected to run the jsPsych experiment
  *
