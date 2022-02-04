@@ -12,7 +12,7 @@ module.exports = function(jsPsych, sequence) {
 
     function getFeedbackText() {
         const data = jsPsych.data.getLastTrialData().trials[0];
-        const feedback_text = data.response === null ? "Zu langsam" : (data.correct ? "" : "Fehler");
+        const feedback_text = data.response === null ? "Too late" : (data.correct ? "" : "Wrong");
         const feedback_class = data.correct ? "" : "error";
         return box_text(feedback_text, ["feedback", jsPsych.timelineVariable("position"), feedback_class]);
     }

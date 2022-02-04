@@ -99,7 +99,7 @@ const instructions_text = [
 
     // Context show-case
     display(
-        center_text("There are also areas these letters will be shown to you. <br> Only one letter sequence will be shown at each time.")
+        center_text("There are two boxes in which these letters will be shown. <br> Only one letter sequence will be shown at each time.")
         + box_text("", ["top"])
         + box_text("", ["bottom"])
         + hint(true)
@@ -122,7 +122,7 @@ const instructions_text = [
         + hint(true)
     ),
     display(
-        center_text("Respond with the 'D' key")
+        center_text("Here you should respond with the 'D' key")
         + box_text("HHSHH", ["top"])
         + box_text("", ["bottom"])
         + hint(true)
@@ -139,7 +139,7 @@ const instructions_text = [
         + hint(true)
     ),
     display(
-        center_text("Respond with the 'L' key")
+        center_text("Here you should respond with the 'L' key")
         + box_text("", ["top"])
         + box_text("FFFFF", ["bottom"])
         + hint(true)
@@ -148,7 +148,7 @@ const instructions_text = [
     // Last slide
     display(
         center_text(
-            "You will begin with a practice round and then you will do 5 blocks of 200 trials."
+            "You will begin with a practice round and there will be 5 blocks of 200 trials."
             + "<br><br><br><br>When you are ready to <b>start</b> press the right arrow key &#x27A1"
         )
         + box_text(backtrack_hint, ["hint"])
