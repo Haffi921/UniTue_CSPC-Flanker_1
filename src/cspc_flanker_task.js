@@ -35,7 +35,18 @@ import post_trial from "./sections/post_trial";
  * @param {"development"|"production"|"jatos"} options.environment The context in which the experiment is run: `development` for `jspsych run`, `production` for `jspsych build`, and "jatos" if served by JATOS
  * @param {{images: string[]; audio: string[]; video: string[];, misc: string[];}} options.assetPaths An object with lists of file paths for the respective `@...Dir` pragmas
  */
+
+function record_group(group_nr) {
+	const conditions = jatos.batchSession.get("condition-counter");
+	conditions[group_nr]++;
+	jatos.batchSession.set("condition-counter", conditions);
+}
+
+const abortStudy = () => jatos.endStudy(false);
+
 export async function run({ assetPaths, input = {}, environment }) {
+	
+	const group_nr = jatos.studySessionData.group;
 
 	const jsPsych = initJsPsych({
 		exclusions: {
@@ -43,11 +54,12 @@ export async function run({ assetPaths, input = {}, environment }) {
 			min_height: 625,
 		},
 		on_finish: function() {
-			jatos.submitResultData(jsPsych.data.get().json(), jatos.endStudy);
+			jatos.submitResultData(jsPsych.data.get().json())
+				.then(() => record_group(group_nr))
+				.then(() => removeEventListener("unload", abortStudy))
+				.then(() => jatos.endStudy());
 		}
 	});
-
-	const group_nr = jatos.studySessionData.group;
 
 	const timeline = [];
 
@@ -86,6 +98,10 @@ export async function run({ assetPaths, input = {}, environment }) {
 		post.post_trial_instructions,
 		post.post_trial,
 	)
-
-	await jsPsych.run(timeline);
+	
+	jatos.onLoad(() => {
+		jatos.showBeforeUnloadWarning();
+		addEventListener("unload", abortStudy);
+		jsPsych.run(timeline);
+	})
 }
