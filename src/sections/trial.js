@@ -44,10 +44,15 @@ module.exports = function(jsPsych, sequence) {
         choices: ['d', 'l'],
         trial_duration: 1990,
         data: () => ({
+            target: jsPsych.timelineVariable('target'),
             congruency: jsPsych.timelineVariable('congruency'),
             type: jsPsych.timelineVariable('type'),
             correct_key: jsPsych.timelineVariable('correct_key'),
-            trial: "trial",
+            position: jsPsych.timelineVariable('position'),
+            context: jsPsych.timelineVariable('context'),
+            group: jsPsych.timelineVariable('group'),
+            trial: jsPsych.timelineVariable("trial"),
+            block: jsPsych.timelineVariable("block"),
         }),
         on_load: function() {
             setTimeout(removeStim, 590)

@@ -72,11 +72,15 @@ export async function run({ assetPaths, input = {}, environment }) {
 	});
 
 	const sequences = [
-		produce_sequence(group_nr),
-		produce_sequence(group_nr),
-		produce_sequence(group_nr),
-		produce_sequence(group_nr),
-		produce_sequence(group_nr),
+		// Practice
+		produce_sequence(group_nr, "practice", 1).slice(0, 20),
+
+		// Trial
+		produce_sequence(group_nr, "trial", 1),
+		produce_sequence(group_nr, "trial", 2),
+		produce_sequence(group_nr, "trial", 3),
+		produce_sequence(group_nr, "trial", 4),
+		produce_sequence(group_nr, "trial", 5),
 	]
 
 	// Switch to fullscreen

@@ -90,10 +90,17 @@ const GROUPS = [
     }
 ];
 
-function produce_sequence(group_nr) {
+function produce_sequence(group_nr, trialtype, block) {
     const group = GROUPS[group_nr];
 
-    const add_position = (pos) => (a) => { a.position = pos; return a };
+    const add_data = (pos, context) => (a) => {
+        a.position = pos;
+        a.context = context;
+        a.group = group_nr;
+        a.trial = trialtype;
+        a.block = block;
+        return a;
+    };
 
     const context_zipper = () => {
         // Create mostly congruent and mostly incongruent sequences
@@ -101,12 +108,12 @@ function produce_sequence(group_nr) {
             // Mostly congruent
             sequencer(MOSTLY_CONGRUENT, TRIAL_TYPES)
                 // Odd nr participants get this as upper context; Even nr get this as lower context
-                .map(add_position(group.mostly_congruent)),
+                .map(add_data(group.mostly_congruent, "Mostly Congruent")),
             
             // Mostly incongruent
             sequencer(MOSTLY_INCONGRUENT, TRIAL_TYPES)
                 // Odd nr participants get this as lower context; Even nr get this as upper context
-                .map(add_position(group.mostly_incongruent)),
+                .map(add_data(group.mostly_incongruent, "Mostly Incongruent")),
         ];
 
         // Returns a map function zips together the context sequences based on the order of 0 and 1 in the array which is being mapped
