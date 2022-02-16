@@ -54,7 +54,7 @@ export async function run({ assetPaths, input = {}, environment }) {
 			min_height: 625,
 		},
 		on_finish: function() {
-			jatos.submitResultData(jsPsych.data.get().json())
+			jatos.submitResultData(jsPsych.data.get().csv())
 				.then(() => record_group(group_nr))
 				.then(() => removeEventListener("unload", abortStudy))
 				.then(() => jatos.endStudy());
@@ -106,6 +106,7 @@ export async function run({ assetPaths, input = {}, environment }) {
 	jatos.onLoad(() => {
 		jatos.showBeforeUnloadWarning();
 		addEventListener("unload", abortStudy);
+		jsPsych.data.addProperties({subject: jatos.studyResultId});
 		jsPsych.run(timeline);
 	})
 }

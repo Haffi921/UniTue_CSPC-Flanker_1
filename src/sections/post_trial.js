@@ -22,8 +22,8 @@ module.exports = function(jsPsych) {
             box_text(jsPsych.timelineVariable("target"), [jsPsych.timelineVariable("context")])
         ),
         data: () => ({
-            box_text: jsPsych.timelineVariable("target"),
-            box_class: jsPsych.timelineVariable("context"),
+            target: jsPsych.timelineVariable("target"),
+            position: jsPsych.timelineVariable("context"),
             trial: "post_trial"
         }),
         choices: () => jsPsych.timelineVariable("keys"),
