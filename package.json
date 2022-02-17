@@ -5,9 +5,10 @@
   "scripts": {
     "jspsych": "jspsych -e experiment",
     "start": "npm run jspsych -- run cspc_flanker_task",
-    "build": "npm run jspsych -- build cspc_flanker_task --jatos"
+    "build": "npm run jspsych -- build cspc_flanker_task"
   },
   "dependencies": {
+    "@jspsych/plugin-external-html": "^1.1.0",
     "@jspsych/plugin-fullscreen": "^1.0.0",
     "@jspsych/plugin-html-keyboard-response": "^1.0.0",
     "@jspsych/plugin-instructions": "^1.0.0",

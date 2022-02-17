@@ -17,6 +17,7 @@ import "../styles/main.scss";
 
 import { initJsPsych } from "jspsych";
 
+import ExternalHtmlPlugin from "@jspsych/plugin-external-html";
 import FullscreenPlugin from "@jspsych/plugin-fullscreen";
 import PreloadPlugin from "@jspsych/plugin-preload";
 
@@ -56,6 +57,7 @@ export async function run({ assetPaths, input = {}, environment }) {
 		on_finish: function() {
 			jatos.submitResultData(jsPsych.data.get().csv())
 				.then(() => record_group(group_nr))
+				.then(() => jatos.showBeforeUnloadWarning(false))
 				.then(() => removeEventListener("unload", abortStudy))
 				.then(() => jatos.endStudy());
 		}
@@ -81,7 +83,22 @@ export async function run({ assetPaths, input = {}, environment }) {
 		produce_sequence(group_nr, "trial", 3),
 		produce_sequence(group_nr, "trial", 4),
 		produce_sequence(group_nr, "trial", 5),
-	]
+	];
+
+	timeline.push({
+		type: ExternalHtmlPlugin,
+		url: "informedConsent.html",
+		force_refresh: true,
+		cont_btn: "start",
+		check_fn: function() {
+			if (document.getElementById('consent_y').checked) {
+				return true;
+			}
+			if (document.getElementById('consent_n').checked) {
+				jatos.endStudy(false);
+			}
+		}
+	})
 
 	// Switch to fullscreen
 	timeline.push({
@@ -104,9 +121,15 @@ export async function run({ assetPaths, input = {}, environment }) {
 	)
 	
 	jatos.onLoad(() => {
-		jatos.showBeforeUnloadWarning();
+		jatos.showBeforeUnloadWarning(true);
 		addEventListener("unload", abortStudy);
-		jsPsych.data.addProperties({subject: jatos.studyResultId});
+		jsPsych.data.addProperties({
+			subject: jatos.studyResultId,
+			workerID: jatos.workerId,
+			prolificPID: jatos.urlQueryParameters.PROLIFIC_PID,
+			prolificSID: jatos.urlQueryParameters.STUDY_ID,
+			prolificSEID: jatos.urlQueryParameters.SESSION_ID,
+		});
 		jsPsych.run(timeline);
 	})
 }
