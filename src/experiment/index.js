@@ -36,7 +36,6 @@ function run(group) {
   const sequences = [
     // Practice
     produce_sequence(group_nr, "practice", 1, 0).slice(0, 20),
-
     // Trial
     produce_sequence(group_nr, "trial", 1, 0),
     produce_sequence(group_nr, "trial", 2, 0),
@@ -66,16 +65,11 @@ function run(group) {
         ? "Mostly Congruent"
         : "Mostly Incongruent",
       (group_nr === 0) | (group_nr === 2)
-        ? "Mostly Inongruent"
+        ? "Mostly Incongruent"
         : "Mostly Congruent"
     )
   );
 
-  jsPsych.run(timeline);
-}
-
-jatos.onLoad(() => {
-  jatos.showBeforeUnloadWarning(true);
   jsPsych.data.addProperties({
     subject: jatos.studyResultId,
     workerID: jatos.workerId,
@@ -83,5 +77,11 @@ jatos.onLoad(() => {
     prolificSID: jatos.urlQueryParameters.STUDY_ID,
     prolificSEID: jatos.urlQueryParameters.SESSION_ID,
   });
+
+  jsPsych.run(timeline);
+}
+
+jatos.onLoad(() => {
+  jatos.showBeforeUnloadWarning(true);
   run();
 });

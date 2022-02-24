@@ -153,7 +153,7 @@ const instructions_text = [
   // Last slide
   display(
     center_text(
-      "You will begin with a practice round and then there will be 5 blocks of 200 trials." +
+      "You will begin with a practice round and then there will be 4 blocks of 200 trials." +
         "<br><br><br><br>When you are ready to <b>start</b> press the right arrow key &#x27A1"
     ) + box_text(backtrack_hint, ["hint"])
   ),

@@ -132,7 +132,7 @@ export default function (jsPsych, block, top_context, bottom_context) {
       trial_display(
         center_text(jsPsych.timelineVariable("center_text")),
         box_text(jsPsych.timelineVariable("target"), [
-          jsPsych.timelineVariable("context"),
+          jsPsych.timelineVariable("position"),
         ])
       ),
     data: () => ({
@@ -153,7 +153,7 @@ export default function (jsPsych, block, top_context, bottom_context) {
         .trials[0].response.toUpperCase();
       return trial_display(
         box_text(jsPsych.timelineVariable("target").split(" ").join(answer), [
-          jsPsych.timelineVariable("context"),
+          jsPsych.timelineVariable("position"),
         ])
       );
     },
