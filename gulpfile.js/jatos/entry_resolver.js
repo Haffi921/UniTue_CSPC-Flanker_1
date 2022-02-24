@@ -1,26 +1,20 @@
 const path = require("path");
 const fs = require("fs");
 
+function pathIsFile(path) {
+  try {
+    if (fs.statSync(path).isFile()) return true;
+  } catch (e) {}
+  return false;
+}
+
 function resolveEntry(entry) {
-  let resolved_entry = false;
   let entry_path = path.resolve(entry);
-  if (fs.existsSync(entry_path)) {
-    if (fs.statSync(entry_path).isFile()) {
-      return entry_path;
-    }
-    if (fs.statSync(path.resolve(entry_path, "index.ts")).isFile()) {
-      return path.resolve(entry_path, "index.ts");
-    }
-    if (fs.statSync(path.resolve(entry_path, "index.js")).isFile()) {
-      return path.resolve(entry_path, "index.js");
-    }
+  for (let ext of ["", "ts", "js", "index.ts", "index.js"]) {
+    const entry_test = path.resolve(entry_path, ext);
+    if (pathIsFile(entry_test)) return entry_test;
   }
-  if (fs.statSync(path.resolve(entry_path + ".ts")).isFile()) {
-    return path.resolve(entry_path + ".ts");
-  }
-  if (fs.statSync(path.resolve(entry_path + ".js")).isFile()) {
-    return path.resolve(entry_path + ".js");
-  }
+  return false;
   // try {
   //   if (!fs.lstatSync(entry).isFile()) {
   //     entry = path.resolve(entry, "index.ts");
@@ -38,7 +32,6 @@ function resolveEntry(entry) {
   //     } catch (e) {}
   //   }
   // }
-  return resolved_entry;
 }
 
 module.exports.getEntries = function (entryList) {

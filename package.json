@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "jspsych": "jspsych -e experiment",
-    "start": "npm run jspsych -- run cspc_flanker_task",
-    "build": "npm run jspsych -- build cspc_flanker_task"
+    "start": "gulp serve",
+    "build": "gulp build"
   },
   "dependencies": {
     "@jspsych/plugin-external-html": "^1.1.0",
@@ -14,9 +13,10 @@
     "@jspsych/plugin-instructions": "^1.0.0",
     "jspsych": "^7.0.0",
     "lodash": "^4.17.21",
-    "numjs": "^0.16.1"
+    "numjs": "^0.16.1",
+    "slugify": "^1.6.5",
+    "uuid": "^8.3.2"
   },
-  "browserslist": ">0.25%, not dead",
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@rollup/plugin-babel": "^5.3.1",
