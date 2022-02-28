@@ -59,6 +59,7 @@ function run(group) {
 
   timeline.push(
     post_trial(
+      group_nr,
       jsPsych,
       5,
       (group_nr === 0) | (group_nr === 2)

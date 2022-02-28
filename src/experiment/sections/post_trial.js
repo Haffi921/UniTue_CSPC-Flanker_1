@@ -58,7 +58,7 @@ function instructions() {
   };
 }
 
-export default function (jsPsych, block, top_context, bottom_context) {
+export default function (group, jsPsych, block, top_context, bottom_context) {
   const values = [
     {
       center_text: "S\tor\tH?",
@@ -138,9 +138,11 @@ export default function (jsPsych, block, top_context, bottom_context) {
     data: () => ({
       target: jsPsych.timelineVariable("target"),
       position: jsPsych.timelineVariable("position"),
+      type: jsPsych.timelineVariable("type"),
       context: jsPsych.timelineVariable("context"),
       trial: "post_trial",
       block: block,
+      group: group,
     }),
     choices: () => jsPsych.timelineVariable("keys"),
   };

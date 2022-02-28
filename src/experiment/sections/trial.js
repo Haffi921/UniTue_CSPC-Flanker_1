@@ -69,6 +69,7 @@ export default function (jsPsych, sequence) {
       group: jsPsych.timelineVariable("group"),
       trial: jsPsych.timelineVariable("trial"),
       block: jsPsych.timelineVariable("block"),
+      switch_rep: jsPsych.timelineVariable("switch_rep"),
     }),
     on_load: function () {
       setTimeout(removeStim, 590);
